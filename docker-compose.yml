@@ -1,0 +1,27 @@
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: grouptask-db
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_DB: grouptask
+      POSTGRES_USER: grouptask
+      POSTGRES_PASSWORD: motdepasse123
+
+    ports:
+      # Changed from 5432 to 5433: a native PostgreSQL 18 Windows service occupies 5432
+      - "5433:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U grouptask -d grouptask"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  postgres_data:
